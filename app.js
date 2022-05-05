@@ -1,28 +1,22 @@
-const formData = require("express-form-data");
-const express = require("express");
-const os = require("os");
-const app = express();
-const indexRouter = require("./routes/index");
+var express = require('express');
+var path = require('path');
+var cookieParser = require('cookie-parser');
+var logger = require('morgan');
+var cors = require('cors');
 
-/**
- * Options are the same as multiparty takes.
- * But there is a new option "autoClean" to clean all files in "uploadDir" folder after the response.
- * By default, it is "false".
- */
-const options = {
-  uploadDir: os.tmpdir(),
-  autoClean: true
-};
+var indexRouter = require('./routes/index');
+var usersRouter = require('./routes/users');
 
-// parse data with connect-multiparty. 
-app.use(formData.parse(options));
-// delete from the request all empty files (size == 0)
-app.use(formData.format());
-// change the file objects to fs.ReadStream 
-app.use(formData.stream());
-// union the body and the files
-app.use(formData.union());
+var app = express();
+
+app.use(cors());
+app.use(logger('dev'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
+app.use('/users', usersRouter);
 
 module.exports = app;

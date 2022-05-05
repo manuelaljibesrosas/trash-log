@@ -4,7 +4,8 @@ var fs = require('fs');
 
 /* GET home page. */
 router.post('/', function(req, res, next) {
-  fs.writeFile(__dirname + '/../dump/' + Date.now() + '.txt', req.body.username + ' '+ req.body.password, (err) => {
+  console.log('triggered', req.body);
+  fs.writeFile(__dirname + '/../dump/' + Date.now() + '.json', JSON.stringify(req.body), (err) => {
     if (err) throw err;
     console.log('The file has been saved!');
   });
